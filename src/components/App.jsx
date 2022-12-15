@@ -16,7 +16,7 @@ export const App = () => {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [largeImage, setLargeImage] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+
 
   useEffect(() => {
     if (searchQuery === '') {
@@ -54,10 +54,16 @@ export const App = () => {
     getPhotos();
   }, [searchQuery, page]);
 
-  const handleFormSubmit = searchQuery => {
-    setSearchQuery(searchQuery);
+  const handleFormSubmit = data => {
+
+    if (data === searchQuery) {
+      return;
+    }
+
+    setSearchQuery(data);
     setPage(1);
     setPhotos([]);
+
   };
 
   const loadMore = () => {
@@ -66,19 +72,19 @@ export const App = () => {
 
   const openModal = data => {
     setLargeImage(data);
-    setShowModal(true);
+
   };
 
   const closeModal = () => {
     setLargeImage(null);
-    setShowModal(false);
+
   };
 
   return (
     <>
       <Searchbar onSubmitForm={handleFormSubmit} />
       <ImageGallery photos={photos} openModal={openModal} />
-      {showModal && <Modal image={largeImage} closeModal={closeModal} />}
+      {largeImage && <Modal image={largeImage} closeModal={closeModal} />}
       {isLoading && <Loader />}
       {photos.length > 0 && <Button handleClick={loadMore} />}
       <ToastContainer autoClose={2000} />
